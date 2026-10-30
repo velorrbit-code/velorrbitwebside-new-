@@ -1,0 +1,6 @@
+{
+  "name": "VelOrrbit — Fully Automatic Trading System",
+  "description": "Advanced MT5 Automation. Intelligent Trade Management. Professional Trading Technology for XAUUSD Gold.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

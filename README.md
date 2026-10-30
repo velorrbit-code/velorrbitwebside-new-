@@ -1,23 +1,38 @@
-# VelOrrbit Website
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+</div>
 
-A streamlined React + TypeScript + Vite website for VelOrrbit. The public site contains only the homepage, algo information, and live MT5 account performance.
+# Run and deploy your AI Studio app
 
-## Run locally
+This contains everything you need to run your app locally.
 
-1. Install Node.js 20+ (or a version supported by the installed Vite release).
-2. Run `npm install`.
-3. Copy `.env.example` to `.env.local` and add the Supabase project URL and **public anon/publishable key**.
-4. Run `npm run dev`.
-5. Create a production build with `npm run build`.
+View your app in AI Studio: https://ai.studio/apps/cfd413d1-ef86-4a66-acf7-c8060897a4c3
 
-## Live MT5 performance setup
+## Run Locally
 
-The website reads the latest rows from the Supabase `public.mt5_live_data` table. It looks for account labels `VelOrrbit V1` and `VelOrrbit V2` and refreshes every 15 seconds. The public website only displays balance, equity, floating P/L, EA status, and last update. It does not display MT5 login IDs, passwords, or individual trade history.
+**Prerequisites:**  Node.js
 
-The MT5-to-Supabase bridge must write accurate account telemetry to this table using a server-side credential. Never put a Supabase service-role key, broker password, or MT5 trading password in frontend code or a public environment variable. Only the Supabase anon/publishable key belongs in `VITE_SUPABASE_ANON_KEY`, with read-only Row Level Security for public visitors.
 
-If no data is available, the page displays a clear not-connected state rather than invented performance figures.
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`
 
-## Important
 
-This is the public marketing/performance website only. Registration, customer accounts, referral rewards, wallet/bonus ledger, and broker execution are not enabled in this version. They need a secure backend, authentication, fraud controls, and legal/broker review before launch.
+## VelOrrbit Client Portal Add-on
+
+The original website sections and visual components are retained. The added Client Portal provides Supabase email registration/login, a personal referral link, and a referral reward history view. The product remains a single product named **VelOrrbit**; live MT5 account cards are account records for that one product, not separate product versions.
+
+### Supabase setup required
+1. In Supabase SQL Editor, run `supabase-client-portal.sql`.
+2. In Authentication > URL Configuration, add your deployed Vercel URL to Site URL / Redirect URLs.
+3. Keep `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` set in Vercel. Use only the Publishable key in the browser; never use a Secret or service-role key.
+4. Create a client account once, then promote the intended administrator in SQL Editor:
+   `insert into public.client_admins(user_id) select id from auth.users where email = 'YOUR-ADMIN-EMAIL';`
+
+### Referral reward workflow
+A referral signup creates a **pending ₹500 reward ledger entry** for the referring member. An authorised administrator must verify the published eligibility conditions and approve/reject it using the database function `review_velorrbit_referral`. This release does not transfer cash to a broker account or bank account. Automatic eligibility verification requires a trusted broker/MT5 account mapping and is a separate integration step.
+
+### Not yet connected
+Client-specific MT5 balance/equity/P&L, a full all-client admin table, broker deposit verification, and automatic referral approval are not activated by this frontend-only portal add-on. They require secure server-side integration and broker-approved data access.
